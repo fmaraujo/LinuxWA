@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body{
+            height: 100%;
+            width: 100%;
+        }
+        body{
+            background: #0e9aef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .none{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <img class="none" src="" width="200px" height="200px">
+
+</body>
+<script>
+
+    fetch('http://localhost:5000/api/getQrCode')
+        .then(res => res.json())
+        .then(res => {
+            let img = document.querySelector('img')
+            img.setAttribute('src', res.qrCode)
+            img.classList.remove('none')
+        })
+
+</script>
+</html>

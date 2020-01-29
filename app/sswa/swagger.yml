@@ -1,0 +1,85 @@
+﻿swagger: "2.0"
+info:
+  description: Este é um Swagger UI para a API ssWhatsApp, desenvolvida para ser utilizada pelos SaaS da ipe.digital
+  version: "1.0.0"
+  title: ssWhatsApp
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/api"
+
+paths:
+
+  /getQrCode:
+    get:
+      operationId: "app.get_qr_code"
+      tags:
+        - "WhatsApp QRCode"
+      summary: "GET / QR Code do WhatsApp Web"
+      description: "Retorna em base64 o QRCode do WhatsApp Web"
+      responses:
+        200:
+          description: "Sucesso."
+        400:
+          description: "Insucesso."
+        500:
+          description: "Insucesso."
+
+  /sendMessage/v1/{numero}/{texto}:
+    post:
+      operationId: "app.send_v1"
+      parameters:
+        - in: path
+          name: numero
+          required: true
+          type: string
+        - in: path
+          name: texto
+          required: true
+          type: string
+      tags:
+        - "WhatsApp Send Message"
+      summary: "POST / Mensagem do WhatsApp"
+      description: "Envio de mensagem de texto pela API do WhatsApp."
+      responses:
+        200:
+          description: "Sucesso no envio da mensagem."
+        400:
+          description: "Insucesso no envio da mensagem."
+
+  /sendMessage/v2/{nome}/{texto}:
+    post:
+      operationId: "app.send_v2"
+      parameters:
+        - in: path
+          name: nome
+          required: true
+          type: string
+        - in: path
+          name: texto
+          required: true
+          type: string
+      tags:
+        - "WhatsApp Send Message"
+      summary: "POST / Mensagem do WhatsApp"
+      description: "Envio de mensagem de texto pelo WhatsApp Web, para contatos já salvos."
+      responses:
+        200:
+          description: "Sucesso no envio da mensagem."
+        400:
+          description: "Insucesso no envio da mensagem."
+
+  /readMessages:
+    get:
+      operationId: "app.schedul"
+      tags:
+        - "WhatsApp Read Messages [BETA]"
+      summary: "GET / Mensagem do WhatsApp"
+      description: "Leitura de mensagem de texto pelo WhatsApp Web."
+      responses:
+        200:
+          description: "Sucesso."
+        400:
+          description: "Insucesso."
