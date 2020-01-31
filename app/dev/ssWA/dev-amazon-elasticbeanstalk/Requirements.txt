@@ -15,5 +15,4 @@ pyvirtualdisplay
 waitress
 requests
 urllib3
-base64
-random
+pybase64

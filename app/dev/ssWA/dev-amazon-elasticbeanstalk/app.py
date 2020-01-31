@@ -10,7 +10,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os, sys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 #from pyvirtualdisplay import Display
-import random
 import base64
 import urllib.request
 
