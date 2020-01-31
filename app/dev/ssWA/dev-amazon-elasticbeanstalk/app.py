@@ -119,15 +119,7 @@ def screenshot():
     except NoSuchElementException:
         return {'message': 'Print não pôde ser efetuado.'}, 400
 
-#def sendFile (name, base64):
 def sendFile(name, link):
-    #_, b64data = base64.split(',')
-    #b64data = bytes(b64data, encoding="ascii")
-    #print(b64data)
-    #with open("static/arquivo.png", "wb") as fh:
-    #    fh.write(base64.decodebytes(b64data))
-    #    fh.close()
-
     link = "http://dev.ssotica.com.br/api/v1/comprovantes/ordemServico/" + link
     base_dir = "./"
     path_to_pdf = os.path.join(base_dir, "arquivo.pdf")
@@ -172,6 +164,59 @@ def sendFile_nameless(numero, link):
         image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
         sleep(2)
     image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(os.path.abspath(path_to_pdf))
+    sleep(2)
+    send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
+    while not len(send_button) > 0:
+        send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
+        sleep(2)
+    send_button = driver.find_element_by_xpath('//span[@data-icon="send-light"]')
+    send_button.click()
+
+def sendFile64(name, b64data):
+    with open("./arquivo.pdf", "wb") as fh:
+        fh.write(base64.decodebytes(b64data))
+        fh.close()
+
+    user = driver.find_element_by_xpath('//span[@title = "{}"]'.format(name))
+    user.click()
+    attachment_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
+    while not len(attachment_box) > 0:
+        attachment_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
+        sleep(2)
+    attachment_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
+    attachment_box.click()
+    image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
+    while not len(image_box) > 0:
+        image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
+        sleep(2)
+    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(os.path.abspath('./arquivo.pdf'))
+    sleep(2)
+    send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
+    while not len(send_button) > 0:
+        send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
+        sleep(2)
+    send_button = driver.find_element_by_xpath('//span[@data-icon="send-light"]')
+    send_button.click()
+
+def sendFile64_nameless(numero, b64data):
+
+    with open("./arquivo.pdf", "wb") as fh:
+        fh.write(base64.decodebytes(b64data))
+        fh.close()
+        
+    driver.get('https://web.whatsapp.com/send?phone=' + numero)
+    sleep(5)
+    attachment_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
+    while not len(attachment_box) > 0:
+        attachment_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
+        sleep(2)
+    attachment_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
+    attachment_box.click()
+    image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
+    while not len(image_box) > 0:
+        image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
+        sleep(2)
+    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(os.path.abspath('./arquivo.pdf'))
     sleep(2)
     send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
     while not len(send_button) > 0:

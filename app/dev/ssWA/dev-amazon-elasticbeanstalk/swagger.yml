@@ -146,3 +146,51 @@ paths:
           description: "Insucesso."
         500:
           description: "Insucesso."
+
+  /sendFile64/v1/{name}/{b64data}:
+    post:
+      operationId: "app.sendFile64"
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+        - in: path
+          name: b64data
+          required: true
+          type: string
+      tags:
+        - "WhatsApp Send Files"
+      summary: "POST / Enviar arquivos via WhatsApp."
+      description: "Envio de arquivos a partir de base64 para o contato selecionado."
+      responses:
+        200:
+          description: "Sucesso."
+        400:
+          description: "Insucesso."
+        500:
+          description: "Insucesso."
+
+  /sendFile64/v2/{numero}/{b64data}:
+    post:
+      operationId: "app.sendFile64_nameless"
+      parameters:
+        - in: path
+          name: numero
+          required: true
+          type: string
+        - in: path
+          name: b64data
+          required: true
+          type: string
+      tags:
+        - "WhatsApp Send Files"
+      summary: "POST / Enviar arquivos via WhatsApp."
+      description: "Envio de arquivos a partir de base64 para o contato selecionado."
+      responses:
+        200:
+          description: "Sucesso."
+        400:
+          description: "Insucesso."
+        500:
+          description: "Insucesso."
