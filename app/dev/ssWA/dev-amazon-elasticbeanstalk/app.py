@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from flask import render_template
+from flask import Flask, render_template, request
+#from flask import render_template
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -114,13 +115,17 @@ def readMessages():
 def screenshot():
     global driver
     printScreen = driver.save_screenshot('static/print.png')
+    with open(os.path.abspath('static/print.png'), "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
     try:
-        return {'print': printScreen}, 200
+        return {'print': printScreen, 'base64':encoded_string}, 200
     except NoSuchElementException:
         return {'message': 'Print não pôde ser efetuado.'}, 400
 
-def sendFile(name, link):
-    link = "http://dev.ssotica.com.br/api/v1/comprovantes/ordemServico/" + link
+def sendFile(name):
+    link = request.get_json()
+    link = link['link']
+
     base_dir = "./"
     path_to_pdf = os.path.join(base_dir, "arquivo.pdf")
     urllib.request.urlretrieve(link, path_to_pdf)
@@ -146,8 +151,9 @@ def sendFile(name, link):
     send_button = driver.find_element_by_xpath('//span[@data-icon="send-light"]')
     send_button.click()
 
-def sendFile_nameless(numero, link):
-    link = "http://dev.ssotica.com.br/api/v1/comprovantes/ordemServico/" + link
+def sendFile_nameless(numero):
+    link = request.get_json()
+    link = link['link']
     base_dir = "./"
     path_to_pdf = os.path.join(base_dir, "arquivo.pdf")
     urllib.request.urlretrieve(link, path_to_pdf)
@@ -172,7 +178,12 @@ def sendFile_nameless(numero, link):
     send_button = driver.find_element_by_xpath('//span[@data-icon="send-light"]')
     send_button.click()
 
-def sendFile64(name, b64data):
+def sendFile64(name):
+    b64data = request.get_json()
+    b64data = b64data['b64data']
+
+    b64data = bytes(b64data, encoding="ascii")
+
     with open("./arquivo.pdf", "wb") as fh:
         fh.write(base64.decodebytes(b64data))
         fh.close()
@@ -198,7 +209,12 @@ def sendFile64(name, b64data):
     send_button = driver.find_element_by_xpath('//span[@data-icon="send-light"]')
     send_button.click()
 
-def sendFile64_nameless(numero, b64data):
+def sendFile64_nameless(numero):
+    
+    b64data = request.get_json()
+    b64data = b64data['b64data']
+
+    b64data = bytes(b64data, encoding="ascii")
 
     with open("./arquivo.pdf", "wb") as fh:
         fh.write(base64.decodebytes(b64data))

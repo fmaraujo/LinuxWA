@@ -13,3 +13,8 @@ webdriver_manager
 connexion[swagger-ui]
 pyvirtualdisplay
 waitress
+requests
+urllib
+re
+base64
+random
