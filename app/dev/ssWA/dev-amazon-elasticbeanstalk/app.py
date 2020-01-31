@@ -11,6 +11,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 #from pyvirtualdisplay import Display
 import random
 import base64
+import re
 
 whatsapp_url = 'https://web.whatsapp.com/'
 options = webdriver.ChromeOptions()
@@ -24,29 +25,16 @@ options.add_argument("test-type")
 driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=options.to_capabilities())
 driver.implicitly_wait(1)
 
-def connect():
-	global driver
-	driver.get(whatsapp_url)
-	def wait_for_qrcode_read(limit):
-		try:
-			WebDriverWait(driver, 15).until(
-				lambda d: d.find_element_by_css_selector('._1FPJ-._39gtr.app-wrapper-web')
-			)
-		except TimeoutException:
-			if limit > 0:
-				return wait_for_qrcode_read(limit - 1)
-			else:
-				return 400
-		return 200
-	return wait_for_qrcode_read(4)
-
 def get_qr_code():
 	global driver
 	driver.get(whatsapp_url)
-	qr_code = driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/img')
+	sleep(10)
+	qr_code_base64 = driver.execute_script('return document.getElementsByClassName("_2RT36")[0].getElementsByTagName("CANVAS")[0].toDataURL("image/png");')
+    #qr_code = driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/img')
 	sleep(2)
 	try:
-		return {'qrCode': qr_code.get_attribute('src')}, 200
+		#return {'qrCode': qr_code.get_attribute('src')}, 200
+		return {'qrCode': qr_code_base64}, 200
 	except NoSuchElementException:
 		return {'message': 'QR-Code não encontrado'}, 400
 	except:
@@ -85,7 +73,7 @@ def send_v2(nome, texto):
     except NoSuchElementException:
         return 400
 
-def schedul():
+def readMessages():
     global driver
     try:
         unread = driver.find_elements_by_class_name("_1ZMSM")  # O botão verde diz que a mensagem é nova
@@ -124,13 +112,20 @@ def schedul():
 
 def screenshot():
     global driver
-    printScreen = driver.save_screenshot('static/images/photo.png')
+    printScreen = driver.save_screenshot('static/print.png')
     try:
         return {'print': printScreen}, 200
     except NoSuchElementException:
         return {'message': 'Print não pôde ser efetuado.'}, 400
 
-def sendFile(name, filepath):
+def sendFile(name, base64):
+    _, b64data = base64.split(',')
+    b64data = bytes(b64data, encoding="ascii")
+    print(b64data)
+    with open("static/arquivo.png", "wb") as fh:
+        fh.write(base64.decodebytes(b64data))
+        fh.close()
+
     user = driver.find_element_by_xpath('//span[@title = "{}"]'.format(name))
     user.click()
     attachment_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
@@ -143,7 +138,7 @@ def sendFile(name, filepath):
     while not len(image_box) > 0:
         image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
         sleep(2)
-    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(filepath)
+    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys('static/arquivo.png')
     sleep(2)
     send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
     while not len(send_button) > 0:
@@ -152,7 +147,7 @@ def sendFile(name, filepath):
     send_button = driver.find_element_by_xpath('//span[@data-icon="send-light"]')
     send_button.click()
 
-def sendFile_nameless(numero, filepath):
+def sendFile_nameless(numero, base64):
     driver.get('https://web.whatsapp.com/send?phone=' + numero)
     sleep(5)
     attachment_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
@@ -165,7 +160,7 @@ def sendFile_nameless(numero, filepath):
     while not len(image_box) > 0:
         image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
         sleep(2)
-    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(filepath)
+    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(base64)
     sleep(2)
     send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
     while not len(send_button) > 0:

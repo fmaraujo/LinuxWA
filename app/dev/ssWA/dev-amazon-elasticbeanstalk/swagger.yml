@@ -73,7 +73,7 @@ paths:
 
   /readMessages:
     get:
-      operationId: "app.schedul"
+      operationId: "app.readMessages"
       tags:
         - "WhatsApp Read Messages [BETA]"
       summary: "GET / Mensagem do WhatsApp"
@@ -99,7 +99,7 @@ paths:
         500:
           description: "Insucesso."
 
-  /sendFile/v1/{name}/{filepath}:
+  /sendFile/v1/{name}/{base64}:
     post:
       operationId: "app.sendFile"
       parameters:
@@ -108,7 +108,7 @@ paths:
           required: true
           type: string
         - in: path
-          name: filepath
+          name: base64
           required: true
           type: string
       tags:
@@ -123,7 +123,7 @@ paths:
         500:
           description: "Insucesso."
 
-  /sendFile/v2/{numero}/{filepath}:
+  /sendFile/v2/{numero}/{base64}:
     post:
       operationId: "app.sendFile_nameless"
       parameters:
@@ -132,7 +132,7 @@ paths:
           required: true
           type: string
         - in: path
-          name: filepath
+          name: base64
           required: true
           type: string
       tags:
