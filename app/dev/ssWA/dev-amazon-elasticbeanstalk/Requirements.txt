@@ -14,7 +14,6 @@ connexion[swagger-ui]
 pyvirtualdisplay
 waitress
 requests
-urllib
-re
+urllib3
 base64
 random

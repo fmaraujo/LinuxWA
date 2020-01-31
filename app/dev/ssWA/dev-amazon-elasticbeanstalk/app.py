@@ -12,7 +12,6 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 #from pyvirtualdisplay import Display
 import random
 import base64
-import re
 import urllib.request
 
 whatsapp_url = 'https://web.whatsapp.com/'
