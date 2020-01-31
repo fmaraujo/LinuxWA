@@ -99,7 +99,7 @@ paths:
         500:
           description: "Insucesso."
 
-  /sendFile/v1/{name}/{base64}:
+  /sendFile/v1/{name}/{link}:
     post:
       operationId: "app.sendFile"
       parameters:
@@ -108,7 +108,7 @@ paths:
           required: true
           type: string
         - in: path
-          name: base64
+          name: link
           required: true
           type: string
       tags:
@@ -123,7 +123,7 @@ paths:
         500:
           description: "Insucesso."
 
-  /sendFile/v2/{numero}/{base64}:
+  /sendFile/v2/{numero}/{link}:
     post:
       operationId: "app.sendFile_nameless"
       parameters:
@@ -132,7 +132,7 @@ paths:
           required: true
           type: string
         - in: path
-          name: base64
+          name: link
           required: true
           type: string
       tags:

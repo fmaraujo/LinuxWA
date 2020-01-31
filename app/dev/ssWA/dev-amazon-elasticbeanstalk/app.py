@@ -12,6 +12,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import random
 import base64
 import re
+import urllib.request
 
 whatsapp_url = 'https://web.whatsapp.com/'
 options = webdriver.ChromeOptions()
@@ -118,13 +119,19 @@ def screenshot():
     except NoSuchElementException:
         return {'message': 'Print não pôde ser efetuado.'}, 400
 
-def sendFile(name, base64):
-    _, b64data = base64.split(',')
-    b64data = bytes(b64data, encoding="ascii")
-    print(b64data)
-    with open("static/arquivo.png", "wb") as fh:
-        fh.write(base64.decodebytes(b64data))
-        fh.close()
+#def sendFile (name, base64):
+def sendFile(name, link):
+    #_, b64data = base64.split(',')
+    #b64data = bytes(b64data, encoding="ascii")
+    #print(b64data)
+    #with open("static/arquivo.png", "wb") as fh:
+    #    fh.write(base64.decodebytes(b64data))
+    #    fh.close()
+
+    link = "http://dev.ssotica.com.br/api/v1/comprovantes/ordemServico/" + link
+    base_dir = "./"
+    path_to_pdf = os.path.join(base_dir, "arquivo.pdf")
+    urllib.request.urlretrieve(link, path_to_pdf)
 
     user = driver.find_element_by_xpath('//span[@title = "{}"]'.format(name))
     user.click()
@@ -138,7 +145,7 @@ def sendFile(name, base64):
     while not len(image_box) > 0:
         image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
         sleep(2)
-    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys('static/arquivo.png')
+    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(os.path.abspath(path_to_pdf))
     sleep(2)
     send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
     while not len(send_button) > 0:
@@ -147,7 +154,11 @@ def sendFile(name, base64):
     send_button = driver.find_element_by_xpath('//span[@data-icon="send-light"]')
     send_button.click()
 
-def sendFile_nameless(numero, base64):
+def sendFile_nameless(numero, link):
+    link = "http://dev.ssotica.com.br/api/v1/comprovantes/ordemServico/" + link
+    base_dir = "./"
+    path_to_pdf = os.path.join(base_dir, "arquivo.pdf")
+    urllib.request.urlretrieve(link, path_to_pdf)
     driver.get('https://web.whatsapp.com/send?phone=' + numero)
     sleep(5)
     attachment_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div')
@@ -160,7 +171,7 @@ def sendFile_nameless(numero, base64):
     while not len(image_box) > 0:
         image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
         sleep(2)
-    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(base64)
+    image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(os.path.abspath(path_to_pdf))
     sleep(2)
     send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
     while not len(send_button) > 0:

@@ -12,6 +12,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import random
 import base64
 import re
+import urllib.request
 
 whatsapp_url = 'https://web.whatsapp.com/'
 options = webdriver.ChromeOptions()
@@ -26,28 +27,15 @@ driver = webdriver.Chrome(ChromeDriverManager().install(), desired_capabilities=
 driver.implicitly_wait(1)
 driver.get(whatsapp_url)
 
-sleep(10)
 
-qr_code_base64 = driver.execute_script('return document.getElementsByClassName("_2RT36")[0].getElementsByTagName("CANVAS")[0].toDataURL("image/png");')
-print(qr_code_base64)
+base_dir = "./"
+path_to_pdf = os.path.join(base_dir, "arquivo.pdf")
+urllib.request.urlretrieve("http://nematoides.com.br/Content/Fotos/exemplo-de-pdf.pdf", path_to_pdf)
 
-print('\n')
 
 name = input('Enter the name of user or group : ')
 input('Enter anything after scanning QR code')
 
-user = driver.find_element_by_xpath('//span[@title = "{}"]'.format(name))
-user.click()
-
-_, b64data = qr_code_base64.split(',')
-
-print(b64data)
-
-b64data = bytes(b64data, encoding="ascii")
-print(b64data)
-
-with open("./arquivo.png", "wb") as fh:
-    fh.write(base64.decodebytes(b64data))
 
 user = driver.find_element_by_xpath('//span[@title = "{}"]'.format(name))
 user.click()
@@ -61,7 +49,7 @@ image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div
 while not len(image_box) > 0:
     image_box = driver.find_elements_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]')
     sleep(2)
-image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(os.path.abspath('./arquivo.png'))
+image_box = driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[3]/button/input').send_keys(os.path.abspath(path_to_pdf))
 sleep(2)
 send_button = driver.find_elements_by_xpath('//span[@data-icon="send-light"]')
 while not len(send_button) > 0:
